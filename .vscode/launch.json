@@ -1,0 +1,52 @@
+{
+  "configurations": [
+    {
+      "name": "Python: FastAPI",
+      "type": "python",
+      "request": "launch",
+      "module": "uvicorn",
+      "args": ["app.main:app"],
+      "jinja": true,
+      "justMyCode": true,
+      "python": "${cwd}/app/.venv/Scripts/python.exe"
+    },
+    {
+      "name": "Python: Remote Attach", // This section is added
+      "type": "python",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 5678
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}",
+          "remoteRoot": "/app"
+        }
+      ]
+    },
+    {
+      "name": "Docker: Python - Fastapi",
+      "type": "docker",
+      "request": "launch",
+      "preLaunchTask": "docker-run: debug",
+      "python": {
+        "pathMappings": [
+          {
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "/app"
+          }
+        ],
+        "projectType": "fastapi"
+      }
+    },
+    {
+      "name": "Python: archivo actual",
+      "type": "python",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ]
+}
