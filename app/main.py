@@ -3,7 +3,7 @@
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from .db import UserInDB
-from .fake import fake_users_db
+from .fake import fake_users_db, fake_hash_password
 from .tools import paginate_parameters
 from . import modules
 

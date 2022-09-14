@@ -19,10 +19,6 @@ def fake_decode_token(token):
     return user
 
 
-def fake_hash_password(password: str):
-    return "fakehashed" + password
-
-
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     user = fake_decode_token(token)
     if not user:
