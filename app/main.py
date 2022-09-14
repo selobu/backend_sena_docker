@@ -1,6 +1,6 @@
 from typing import Union
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, status
 
 from .db import User, UserOut
 app = FastAPI()
@@ -20,7 +20,7 @@ async def read_user(user_id:int, q: Union[str, None]=None):
         raise HTTPException(status_code=404, detail="Item not found")
     return user
 
-@app.post("/User/", response_model=UserOut)
+@app.post("/User/", response_model=UserOut, status_code=status.HTTP_201_CREATED)
 async def registrar_user(user: User):
     return user
 
