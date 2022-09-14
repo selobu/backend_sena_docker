@@ -9,9 +9,13 @@ from . import modules
 
 # print(help(FastAPI))
 app = FastAPI(
-    title='Backend Sena https://github.com/selobu/backend_sena_docker',
+    title='Backend Sena',
     version='0.0.1',
-    contact='https://gestionhseq.com')
+    description='https://github.com/selobu/backend_sena_docker',
+    contact={'name':'Sebastian López Buriticá', 'email':'sebastian dot lopez at gestionhseq.com',
+             'url':'https://gestionhseq.com'},
+    license_info={'name':'GPL V3',
+                  'url': 'https://www.gnu.org/licenses/gpl-3.0.en.html'})
 
 modules.init_app(app)
 
