@@ -20,9 +20,10 @@ fake_users_db = {
         "cedula": "123213",
         "departamento": "Cundinamarca",
         "municipio": "cota",
-        "direccion": "calle"
+        "direccion": "calle",
+        "activo": True
     },
-    "mail@gmail.com": {
+    "johndoe@example.com": {
         "nombres": "johndoe",
         "apellidos": "John Doe",
         "correo": "johndoe@example.com",
@@ -30,7 +31,8 @@ fake_users_db = {
         "cedula": "123214",
         "departamento": "Cundinamarca",
         "municipio": "cota",
-        "direccion": "calle"
+        "direccion": "calle",
+        "activo": False
     },
 }
 # --------------------
@@ -67,6 +69,12 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     return user
 
 
+async def get_current_active_user(current_user: User = Depends(get_current_user)):
+    if not current_user.activo:
+        raise HTTPException(status_code=400, detail="Usuario inactivo")
+    return current_user
+
+
 @app.get("/")
 def read_root():
     return {"docs": "/docs"}
@@ -93,8 +101,9 @@ async def read_all_user(commons: dict = Depends(paginate_parameters),\
 
 
 @app.get("/User/me", response_model=UserOut)
-async def read_users_me(current_user: User = Depends(get_current_user)):
+async def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user
+
 
 @app.get("/User/{user_id}", response_model=UserOut)
 async def read_user(user_id:int, q: Union[str, None]=None):
