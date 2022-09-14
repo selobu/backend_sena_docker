@@ -5,6 +5,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from .db import UserInDB
 from .fake import fake_users_db, fake_hash_password
 from .tools import paginate_parameters
+from fastapi.middleware.cors import CORSMiddleware
 from . import modules
 
 # print(help(FastAPI))
@@ -18,6 +19,16 @@ app = FastAPI(
                   'url': 'https://www.gnu.org/licenses/gpl-3.0.en.html'})
 
 modules.init_app(app)
+
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 
 @app.get("/")
 def read_root():
