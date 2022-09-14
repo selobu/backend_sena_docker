@@ -1,6 +1,7 @@
 from typing import Union
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+
 from .db import User, UserOut
 app = FastAPI()
 
@@ -14,6 +15,9 @@ async def read_user(user_id:int, q: Union[str, None]=None):
     user = User(nombres='', apellidos='',cedula='',
             correo='noreply.noreply@gestionhseq.com',
             departamento='',municipio='', direccion='')
+    itemnotfound = False
+    if itemnotfound:
+        raise HTTPException(status_code=404, detail="Item not found")
     return user
 
 @app.post("/User/", response_model=UserOut)
