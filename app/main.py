@@ -65,11 +65,6 @@ def read_root():
     return {"docs": "/docs"}
 
 
-@app.get("/auth/")
-async def read_items(token: str = Depends(oauth2_scheme)):
-    return {"token": token}
-
-
 @app.post("/token")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user_dict = fake_users_db.get(form_data.username)
@@ -90,7 +85,7 @@ async def read_all_user(commons: dict = Depends(paginate_parameters),\
     return commons
 
 
-@app.get("/User/me")
+@app.get("/User/me", response_model=UserOut)
 async def read_users_me(current_user: User = Depends(get_current_user)):
     return current_user
 
