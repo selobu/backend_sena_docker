@@ -9,7 +9,9 @@ from . import modules
 
 # print(help(FastAPI))
 app = FastAPI(
-    title='Backend Sena https://github.com/selobu/backend_sena_docker', version='0.0.1')
+    title='Backend Sena https://github.com/selobu/backend_sena_docker',
+    version='0.0.1',
+    contact='https://gestionhseq.com')
 
 modules.init_app(app)
 
