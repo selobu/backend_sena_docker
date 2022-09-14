@@ -4,6 +4,7 @@ from pydantic import BaseModel
 class User(BaseModel):
         nombres: str
         apellidos: str
+        password: str='123456'
         cedula: str
         departamento: str
         municipio: str
