@@ -24,3 +24,7 @@ class UserOut(BaseModel):
         direccion: str
         activo: bool = True
         pertenecealgrupo: bool = False
+        
+
+class UserInDB(User):
+    hashed_password: str
