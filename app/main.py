@@ -7,10 +7,9 @@ from .fake import fake_users_db, fake_hash_password
 from .tools import paginate_parameters
 from . import modules
 
-print(help(FastAPI))
+# print(help(FastAPI))
 app = FastAPI(
-    title='Backend Sena https://github.com/selobu/backend_sena_docker', version='0.0.1',
-    openapi_url='https://www.gestionhseq.com')
+    title='Backend Sena https://github.com/selobu/backend_sena_docker', version='0.0.1')
 
 modules.init_app(app)
 
