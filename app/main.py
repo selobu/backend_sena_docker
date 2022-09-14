@@ -58,6 +58,12 @@ def fake_hash_password(password: str):
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     user = fake_decode_token(token)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Credenciales de autenticación inválidas",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     return user
 
 
