@@ -1,3 +1,4 @@
+# coding: utf-8
 from typing import Union
 
 from fastapi import FastAPI, HTTPException, status,\
@@ -70,12 +71,12 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     user_dict = fake_users_db.get(form_data.username)
     if not user_dict:
         raise HTTPException(
-            status_code=400, detail="Incorrect username or password")
+            status_code=400, detail="Usuaro o contraseña equivocada")
     user = UserInDB(**user_dict)
     hashed_password = fake_hash_password(form_data.password)
     if not hashed_password == user.hashed_password:
         raise HTTPException(
-            status_code=400, detail="Incorrect username or password")
+            status_code=400, detail="Usuario o contraseña equivocada")
 
     return {"access_token": user.correo, "token_type": "bearer"}
 
