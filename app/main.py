@@ -30,7 +30,9 @@ settings.engine = engine
 # ---------------------------------------------
 # to be used onle once when database is created
 if not isfile('./database.db'):
-    SQLModel.metadata.create_all(engine)
+    try:
+        SQLModel.metadata.create_all(engine)
+    except: pass
 createusers()
 # ---------------------------------------------
 
