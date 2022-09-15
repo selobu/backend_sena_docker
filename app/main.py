@@ -33,7 +33,8 @@ engine = create_engine(settings.database_uri) # creating an sqlite database
 settings.engine = engine
 # ---------------------------------------------
 # to be used onle once when database is created
-SQLModel.metadata.create_all(engine)
+if not os.path.isfile('./database.db'):
+    SQLModel.metadata.create_all(engine)
 createusers()
 # ---------------------------------------------
 
