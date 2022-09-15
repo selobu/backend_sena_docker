@@ -23,6 +23,7 @@ class User(SQLModel, table=True):
 
 @map_name_to_table
 class UserOut(SQLModel):
+    id: Optional[int]
     nombres: str
     apellidos: str
     correo: EmailStr

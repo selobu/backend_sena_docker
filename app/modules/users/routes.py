@@ -54,12 +54,12 @@ async def read_all_user(commons: dict = Depends(paginate_parameters),
     return res
 
 
-@app.get("/User/me", response_model=UserOut)
+@app.get("/User/me", response_model=Tb.UserOut)
 async def read_users_me(current_user: User = Depends(get_current_active_user)):
     return current_user
 
 
-@app.get("/User/{user_id}", response_model=UserOut)
+@app.get("/User/{user_id}", response_model=Tb.UserOut)
 async def read_user(user_id: int, q: Union[str, None] = None):
     user = User(nombres='', apellidos='', cedula='',
                 correo='noreply.noreply@gestionhseq.com',
@@ -70,14 +70,18 @@ async def read_user(user_id: int, q: Union[str, None] = None):
     return user
 
 
-@app.post("/User/", response_model=UserOut, status_code=status.HTTP_201_CREATED)
-async def registrar_user(user: User, token: str = Depends(oauth2_scheme)):
+@app.post("/User/",  response_model=Tb.User, status_code=status.HTTP_201_CREATED)
+async def registrar_user(user: Tb.User, token: str = Depends(oauth2_scheme)):
+    with Session(engine) as session:
+        session.add(user)
+        session.commit()
+        session.refresh(user)# updating the id
     return user
 
 
-@app.put("/User/{user_id}", response_model=UserOut)
+@app.put("/User/{user_id}", response_model=Tb.UserOut)
 async def update_user(user_id: int, user: User, token: str = Depends(oauth2_scheme)):
-    usr = User(nombres='', apellidos='', cedula='',
+    usr = Tb.User(nombres='', apellidos='', cedula='',
                correo='noreply.noreply@gestionhseq.com',
                departamento='', municipio='', direccion='')
     return usr
