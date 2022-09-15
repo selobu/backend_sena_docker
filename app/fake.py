@@ -1,8 +1,10 @@
 # coding:utf-8
 __all__ = ['createusers']
+from msilib.schema import Error
 from app.config import settings
 from sqlmodel import Session, select
 from app.tools import digest
+from json import dumps
 
 def createusers():
     Tb = settings.app.Tb
@@ -35,8 +37,9 @@ def createusers():
         not2add = select(Tb.User.correo).filter(Tb.User.correo.in_(correos))
         not2add = session.exec(not2add).all()
         # testing under heroku server
-        print(not2add)
+        
         toadd = [usr for usr in default_users if usr['correo'] not in not2add]
+        raise Exception(dumps(not2add)+'  +  '+dumps(toadd))
         added= []
         for user in toadd:
             user['password'] = digest(user['password'])
