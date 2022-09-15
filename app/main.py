@@ -22,11 +22,9 @@ app = FastAPI(
 settings.app = app
 setattr(app,'Tb', Tb)
 
-modules.init_app(app)
-
-
 engine = create_engine(settings.database_uri) # creating an sqlite database
 settings.engine = engine
+modules.init_app(app)
 # ---------------------------------------------
 # to be used onle once when database is created
 # debe ejecutarse desde un terminal como un script
