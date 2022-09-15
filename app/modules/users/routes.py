@@ -1,7 +1,7 @@
 from fastapi import status, Depends, HTTPException
 from app.db import User, UserOut, UserInDB
 from fastapi.security import OAuth2PasswordBearer
-from app.fake import fake_users_db
+# from app.fake import fake_users_db
 from app.tools import paginate_parameters
 from typing import Union
 from app.main import app
@@ -15,7 +15,7 @@ def get_user(db, username: str):
 
 
 def fake_decode_token(token):
-    user = get_user(fake_users_db, token)
+    user = get_user({}, token)
     return user
 
 

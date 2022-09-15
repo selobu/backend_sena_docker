@@ -1,30 +1,52 @@
-# ------------------- to bew replaced 
-fake_users_db = {
-    "selobu@gmail.com": {
+# coding:utf-8
+__all__ = ['createusers']
+from app.config import settings
+from sqlmodel import Session, select
+import hashlib
+
+def createusers():
+    Tb = settings.app.Tb
+    default_users = [{
         "nombres": "selobu",
         "apellidos": "John Doe",
         "correo": "selobu@gmail.com",
-        "hashed_password":  "fakehashedsecret",
         "cedula": "123213",
         "departamento": "Cundinamarca",
         "municipio": "cota",
         "direccion": "calle",
-        "activo": True
+        "activo": True,
+        "pertenecealgrupo": True,
+        "password": "secret"
     },
-    "johndoe@example.com": {
+        {
         "nombres": "johndoe",
         "apellidos": "John Doe",
         "correo": "johndoe@example.com",
-        "hashed_password": "fakehashedsecret2",
         "cedula": "123214",
         "departamento": "Cundinamarca",
         "municipio": "cota",
         "direccion": "calle",
-        "activo": False
+        "activo": False,
+        "password": "secret"
     },
-}
-# --------------------
-
+    ]
+    correos= [u['correo'] for u in default_users]
+    with Session(settings.engine) as session:
+        not2add = select(Tb.User.correo).filter(Tb.User.correo.in_(correos))
+        not2add = session.exec(not2add).all()
+        toadd = [usr for usr in default_users if usr['correo'] not in not2add]
+        added= []
+        for user in toadd:
+            hash_object = hashlib.sha256(bytearray(user['password'],'utf-8'))
+            hex_dig = hash_object.hexdigest()
+            user['password'] = hex_dig
+            added.append(Tb.User(**user))
+            
+        if len(toadd) > 0:
+            session.add_all(added)
+            session.commit()
 
 def fake_hash_password(password: str):
     return "fakehashed" + password
+
+

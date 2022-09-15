@@ -1,30 +1,37 @@
 # coding: utf-8
 
 from fastapi import FastAPI, HTTPException, Depends
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm
 from .db import UserInDB
-from .fake import fake_users_db, fake_hash_password
-from .tools import paginate_parameters, Tb
+from .fake import createusers
+from .tools import  Tb
 from fastapi.middleware.cors import CORSMiddleware
 from . import modules
+from .config import settings
 from sqlmodel import create_engine, SQLModel
 # print(help(FastAPI))
 app = FastAPI(
-    title='Backend Sena',
-    version='0.0.1',
-    description='[source code](https://github.com/selobu/backend_sena_docker)',
-    contact={'name': 'Sebastian López Buriticá', 'email': 'sebastian.lopez@gestionhseq.com',
-             'url':'https://gestionhseq.com'},
+    title= settings.api_name,
+    version= settings.version,
+    description= settings.api_description,
+    contact= settings.api_contact,
     license_info={'name': 'GPL V3',
                   'url': 'https://www.gnu.org/licenses/gpl-3.0.en.html'})
 
+# making app globally available by calling settings
+settings.app = app
 setattr(app,'Tb', Tb)
 
 modules.init_app(app)
 
-engine = create_engine("sqlite:///database.db") # creating an sqlite database
 
+engine = create_engine(settings.database_uri) # creating an sqlite database
+settings.engine = engine
+# ---------------------------------------------
+# to be used onle once when database is created
 SQLModel.metadata.create_all(engine)
+createusers()
+# ---------------------------------------------
 
 # CORS
 app.add_middleware(
