@@ -41,8 +41,10 @@ def createusers():
         added= []
         for user in toadd:
             user['password'] = digest(user['password'])
-            added.append(Tb.User(**user))
-        if len(toadd) > 0:
+            session.add(Tb.User(**user))
+            #added.append(Tb.User(**user))
+        session.commit()
+        if len(toadd) > 0 and False:
             session.add_all(added)
             session.commit()
 
