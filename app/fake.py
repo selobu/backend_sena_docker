@@ -42,7 +42,7 @@ def createusers():
         for user in toadd:
             user['password'] = digest(user['password'])
             added.append(Tb.User(**user))
-        raise Exception(dumps(toadd)+'  +  '+dumps(added))
+        raise Exception(dumps(toadd))
         if len(toadd) > 0:
             session.add_all(added)
             session.commit()
