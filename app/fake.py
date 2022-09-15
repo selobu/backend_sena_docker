@@ -1,6 +1,5 @@
 # coding:utf-8
 __all__ = ['createusers']
-from msilib.schema import Error
 from app.config import settings
 from sqlmodel import Session, select
 from app.tools import digest
