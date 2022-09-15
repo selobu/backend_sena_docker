@@ -1,9 +1,4 @@
 # coding: utf-8
-import os
-try:
-    os.remove("./database.db")
-except:
-    pass
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from .db import UserInDB
