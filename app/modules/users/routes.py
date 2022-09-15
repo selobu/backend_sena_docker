@@ -75,9 +75,21 @@ async def registrar_user(user: Tb.User, token: str = Depends(oauth2_scheme)):
     return user
 
 
-@app.put("/User/{user_id}", response_model=Tb.UserOut)
-async def update_user(user_id: int, user: Tb.User, token: str = Depends(oauth2_scheme)):
-    usr = Tb.User(nombres='', apellidos='', cedula='',
-               correo='noreply.noreply@gestionhseq.com',
-               departamento='', municipio='', direccion='')
+@app.put("/User/{user_mail}", response_model=Tb.UserOut)
+async def update_user(user_email: str, user: Tb.User, token: str = Depends(oauth2_scheme)):
+    # se lee el id del usuario
+    keys2update = list(user.__fields__.keys())
+    keys2update = [k for k in keys2update if k != 'id']
+    with Session(engine) as session:
+        res = select(Tb.User).filter(Tb.User.correo==user_email)
+        usr = session.exec(res).one()
+        # se actualizan los datos del usuario excepto el id
+        for k in keys2update:
+            if hasattr(usr, k):
+                try:
+                    setattr(usr,k,getattr(user,k))
+                except: pass
+        session.add(usr)
+        session.commit()
+        session.refresh(usr)
     return usr
