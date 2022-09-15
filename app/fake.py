@@ -34,6 +34,8 @@ def createusers():
     with Session(settings.engine) as session:
         not2add = select(Tb.User.correo).filter(Tb.User.correo.in_(correos))
         not2add = session.exec(not2add).all()
+        # testing under heroku server
+        print(not2add)
         toadd = [usr for usr in default_users if usr['correo'] not in not2add]
         added= []
         for user in toadd:
