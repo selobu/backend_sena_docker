@@ -4,7 +4,7 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from .db import UserInDB
 from .fake import fake_users_db, fake_hash_password
-from .tools import paginate_parameters
+from .tools import paginate_parameters, Tb
 from fastapi.middleware.cors import CORSMiddleware
 from . import modules
 from sqlmodel import create_engine, SQLModel
@@ -17,6 +17,8 @@ app = FastAPI(
              'url':'https://gestionhseq.com'},
     license_info={'name': 'GPL V3',
                   'url': 'https://www.gnu.org/licenses/gpl-3.0.en.html'})
+
+setattr(app,'Tb', Tb)
 
 modules.init_app(app)
 
