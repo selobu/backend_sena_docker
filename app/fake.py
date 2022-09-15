@@ -38,15 +38,10 @@ def createusers():
         # testing under heroku server
         # raise Exception(dumps(session.exec(select(Tb.User.correo)).all()))
         toadd = [usr for usr in default_users if usr['correo'] not in not2add]
-        added= []
         for user in toadd:
             user['password'] = digest(user['password'])
-            #session.add(Tb.User(**user))
-            added.append(Tb.User(**user))
-        #session.commit()
-        if len(toadd) > 0:
-            session.add_all(added)
-            session.commit()
+            session.add(Tb.User(**user))
+        session.commit()
 
 def fake_hash_password(password: str):
     return "fakehashed" + password
