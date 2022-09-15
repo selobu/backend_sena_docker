@@ -4,11 +4,11 @@ from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from .db import UserInDB
 from .fake import createusers
-from .tools import  Tb
+from .tools import  Tb, digest
 from fastapi.middleware.cors import CORSMiddleware
 from . import modules
 from .config import settings
-from sqlmodel import create_engine, SQLModel
+from sqlmodel import create_engine, SQLModel, Session, select
 # print(help(FastAPI))
 app = FastAPI(
     title= settings.api_name,
@@ -50,13 +50,13 @@ def read_root():
 
 @app.post("/token")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user_dict = fake_users_db.get(form_data.username)
-    if not user_dict:
-        raise HTTPException(
-            status_code=400, detail="Usuaro o contraseña equivocada")
-    user = UserInDB(**user_dict)
-    hashed_password = fake_hash_password(form_data.password)
-    if not hashed_password == user.hashed_password:
+    # getting the user
+    with Session(engine) as session:
+        res = select(Tb.User).filter(Tb.User.correo == form_data.username)
+        user = session.exec(res).first()
+        if user is None:
+            HTTPException(status_code=404, detail='Usuario no encontrado')
+    if digest(form_data.password) != user.password:
         raise HTTPException(
             status_code=400, detail="Usuario o contraseña equivocada")
 

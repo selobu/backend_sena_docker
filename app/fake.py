@@ -2,7 +2,7 @@
 __all__ = ['createusers']
 from app.config import settings
 from sqlmodel import Session, select
-import hashlib
+from app.tools import digest
 
 def createusers():
     Tb = settings.app.Tb
@@ -37,9 +37,7 @@ def createusers():
         toadd = [usr for usr in default_users if usr['correo'] not in not2add]
         added= []
         for user in toadd:
-            hash_object = hashlib.sha256(bytearray(user['password'],'utf-8'))
-            hex_dig = hash_object.hexdigest()
-            user['password'] = hex_dig
+            user['password'] = digest(user['password'])
             added.append(Tb.User(**user))
             
         if len(toadd) > 0:

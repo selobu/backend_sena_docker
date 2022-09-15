@@ -1,4 +1,12 @@
+# coding:utf-8
+import hashlib
 from typing import Union
+
+def digest(text):
+    if isinstance(text, str):
+        text = bytearray(text, 'utf-8')
+    hash_object = hashlib.sha256(text)
+    return hash_object.hexdigest()
 
 async def paginate_parameters(
     q: Union[str, None] = None, skip: int = 0, limit: int = 20

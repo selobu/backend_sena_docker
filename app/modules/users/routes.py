@@ -4,18 +4,25 @@ from fastapi.security import OAuth2PasswordBearer
 # from app.fake import fake_users_db
 from app.tools import paginate_parameters
 from typing import Union
+from app.config import settings
 from app.main import app
+from sqlmodel import Session, select
+
+Tb = settings.app.Tb
+engine = settings.engine
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
-def get_user(db, username: str):
-    if username in db:
-        user_dict = db[username]
-        return UserInDB(**user_dict)
-
+def get_user(email: str):
+    with Session(engine) as session:
+        res = select(Tb.User).filter(Tb.User.correo==email)
+        res = session.exec(res).first()
+        if res is not None:
+            return res
+        raise HTTPException(status_code=404, detail="Usuario no encontradp")
 
 def fake_decode_token(token):
-    user = get_user({}, token)
+    user = get_user( token)
     return user
 
 
