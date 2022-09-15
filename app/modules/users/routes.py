@@ -46,7 +46,12 @@ async def get_current_active_user(current_user: User = Depends(get_current_user)
 @app.get("/User/")
 async def read_all_user(commons: dict = Depends(paginate_parameters),
                         token: str = Depends(oauth2_scheme)):
-    return commons
+    email = token
+    limit = commons['limit']
+    with Session(engine) as session:
+        res = select(Tb.User).limit(limit)
+        res = session.exec(res).all()
+    return res
 
 
 @app.get("/User/me", response_model=UserOut)
