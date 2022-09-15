@@ -33,7 +33,7 @@ if not isfile('./database.db'):
     try:
         SQLModel.metadata.create_all(engine)
     except: pass
-createusers()
+    createusers()
 # ---------------------------------------------
 
 # CORS
