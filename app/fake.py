@@ -36,13 +36,12 @@ def createusers():
         not2add = select(Tb.User.correo).filter(Tb.User.correo.in_(correos))
         not2add = session.exec(not2add).all()
         # testing under heroku server
-        
+        raise Exception(dumps(session.exec(select(Tb.User.correo).all())))
         toadd = [usr for usr in default_users if usr['correo'] not in not2add]
         added= []
         for user in toadd:
             user['password'] = digest(user['password'])
             added.append(Tb.User(**user))
-        raise Exception(dumps(toadd))
         if len(toadd) > 0:
             session.add_all(added)
             session.commit()
