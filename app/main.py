@@ -7,7 +7,7 @@ from .fake import fake_users_db, fake_hash_password
 from .tools import paginate_parameters
 from fastapi.middleware.cors import CORSMiddleware
 from . import modules
-
+from sqlmodel import create_engine, SQLModel
 # print(help(FastAPI))
 app = FastAPI(
     title='Backend Sena',
@@ -19,6 +19,10 @@ app = FastAPI(
                   'url': 'https://www.gnu.org/licenses/gpl-3.0.en.html'})
 
 modules.init_app(app)
+
+engine = create_engine("sqlite:///database.db") # creating an sqlite database
+
+SQLModel.metadata.create_all(engine)
 
 # CORS
 app.add_middleware(

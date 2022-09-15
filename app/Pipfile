@@ -8,6 +8,8 @@ fastapi = "*"
 uvicorn = {extras = ["standard"], version = "*"}
 pydantic = {extras = ["email"], version = "*"}
 python-multipart = "*"
+sqlmodel = "==0.0.8"
+sqlalchemy2-stubs = "*"
 
 [dev-packages]
 
