@@ -29,6 +29,8 @@ engine = create_engine(settings.database_uri) # creating an sqlite database
 settings.engine = engine
 # ---------------------------------------------
 # to be used onle once when database is created
+# debe ejecutarse desde un terminal como un script
+# caso contrario de tener varios workers genera errores.
 if not isfile('./database.db'):
     try:
         SQLModel.metadata.create_all(engine)
