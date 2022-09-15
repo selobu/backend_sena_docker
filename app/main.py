@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from . import modules
 from .config import settings
 from sqlmodel import create_engine, SQLModel, Session, select
+from os.path import isfile, exists
 # print(help(FastAPI))
 app = FastAPI(
     title= settings.api_name,
@@ -28,7 +29,7 @@ engine = create_engine(settings.database_uri) # creating an sqlite database
 settings.engine = engine
 # ---------------------------------------------
 # to be used onle once when database is created
-if not os.path.isfile('./database.db'):
+if not isfile('./database.db'):
     SQLModel.metadata.create_all(engine)
 createusers()
 # ---------------------------------------------
