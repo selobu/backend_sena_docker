@@ -14,6 +14,14 @@ class Ubicaciones(SQLModel, table=True):
     departamento: str
     centro_trabajo: str
     sitio: str
+    activa: bool = True
+
+
+@map_name_to_table
+class Ubicaciones_register(SQLModel):
+    departamento: str
+    centro_trabajo: str
+    sitio: str
 
 @map_name_to_table
 class Producto(SQLModel, table=True):
@@ -26,4 +34,18 @@ class Producto(SQLModel, table=True):
     foto2: Optional[bytes]
     descripcion: str
     ubicacion: Optional[int] = Field(default=None, foreign_key='ubicaciones.id')
+    activa: bool = True
+
+
+@map_name_to_table
+class Product_register(SQLModel):
+    tipo: str
+    responsable: Optional[int] = Field(default=None, foreign_key='user.id')
+    nombre: str
+    serial: str
+    foto1: Optional[bytes]
+    foto2: Optional[bytes]
+    descripcion: str
+    ubicacion: Optional[int] = Field(
+        default=None, foreign_key='ubicaciones.id')
     activa: bool = True
