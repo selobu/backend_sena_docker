@@ -1,7 +1,7 @@
 #coding:utf-8
 __version__ = "0.0.1"
 
-default_modules = ['users']
+default_modules = ['users','bodega']
 
 
 def init_app(app, enabled_modules=None, **kwargs):

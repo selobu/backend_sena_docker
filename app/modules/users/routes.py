@@ -1,4 +1,5 @@
-from fastapi import status, Depends, HTTPException
+from fastapi import status, Depends, HTTPException,\
+    APIRouter
 from fastapi.security import OAuth2PasswordBearer
 # from app.fake import fake_users_db
 from app.tools import paginate_parameters
@@ -7,10 +8,20 @@ from app.config import settings
 from app.main import app
 from sqlmodel import Session, select
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+router = APIRouter(
+    prefix="/Users",
+    tags=["Users"],
+    dependencies=[Depends(oauth2_scheme)],
+    responses={404: {"description": "Not found"}},
+)
+
+
 Tb = settings.app.Tb
 engine = settings.engine
 
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
 
 def get_user(email: str):
     with Session(engine) as session:
@@ -42,7 +53,7 @@ async def get_current_active_user(current_user: Tb.User = Depends(get_current_us
     return current_user
 
 
-@app.get("/User/")
+@router.get("/")
 async def read_all_user(commons: dict = Depends(paginate_parameters),
                         token: str = Depends(oauth2_scheme)):
     email = token
@@ -53,12 +64,12 @@ async def read_all_user(commons: dict = Depends(paginate_parameters),
     return res
 
 
-@app.get("/User/me", response_model=Tb.UserOut)
+@router.get("/me", response_model=Tb.UserOut)
 async def read_my_data(current_user: Tb.User = Depends(get_current_active_user)):
     return current_user
 
 
-@app.get("/User/{user_email}", response_model=Tb.UserOut)
+@router.get("/{user_email}", response_model=Tb.UserOut)
 async def read_user(user_email: str, q: Union[str, None] = None):
     with Session(engine) as session:
         res = select(Tb.User).filter(Tb.User.correo==user_email)
@@ -66,7 +77,7 @@ async def read_user(user_email: str, q: Union[str, None] = None):
     return user
 
 
-@app.post("/User/",  response_model=Tb.User, status_code=status.HTTP_201_CREATED)
+@router.post("/",  response_model=Tb.User, status_code=status.HTTP_201_CREATED)
 async def registrar_user(user: Tb.User, token: str = Depends(oauth2_scheme)):
     with Session(engine) as session:
         session.add(user)
@@ -75,7 +86,7 @@ async def registrar_user(user: Tb.User, token: str = Depends(oauth2_scheme)):
     return user
 
 
-@app.put("/User/{user_mail}", response_model=Tb.UserOut)
+@router.put("/{user_mail}", response_model=Tb.UserOut)
 async def update_user(user_email: str, user: Tb.User, token: str = Depends(oauth2_scheme)):
     # se lee el id del usuario
     keys2update = list(user.__fields__.keys())
