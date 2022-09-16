@@ -25,5 +25,5 @@ class Producto(SQLModel, table=True):
     foto1: Optional[bytes]
     foto2: Optional[bytes]
     descripcion: str
-    ubicacion: Optional[int] = Field(default=None, foreign_key='ubicaiones.id')
+    ubicacion: Optional[int] = Field(default=None, foreign_key='ubicaciones.id')
     activa: bool = True
