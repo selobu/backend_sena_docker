@@ -27,16 +27,7 @@ setattr(app,'Tb', Tb)
 engine = create_engine(settings.database_uri) # creating an sqlite database
 settings.engine = engine
 modules.init_app(app)
-# ---------------------------------------------
-# to be used onle once when database is created
-# debe ejecutarse desde un terminal como un script
-# caso contrario de tener varios workers genera errores.
-if not isfile('./database.db'):
-    try:
-        SQLModel.metadata.create_all(engine)
-    except: pass
-    createusers()
-# ---------------------------------------------
+
 
 # CORS
 app.add_middleware(
@@ -52,6 +43,17 @@ app.add_middleware(
 def read_root():
     return {"docs": "/docs"}
 
+
+@app.get("/creatreall")
+def create_all():
+    SQLModel.metadata.create_all(engine)
+    return {'message':'ok'}
+
+
+@app.get("/createdefaultusers")
+def create_all():
+    createusers()
+    return {'message': 'ok'}
 
 @app.post("/token")
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
