@@ -21,17 +21,20 @@ Tb = settings.app.Tb
 engine = settings.engine
 
 
-@router.get("/{}", response_model=Tb.UserOut)
-async def read_products(user_email: str, q: Union[str, None] = None):
+@router.get("/", response_model=Tb.Producto)
+async def read_products(commons: dict = Depends(paginate_parameters),
+    token: str = Depends(oauth2_scheme)):
+    email = token
+    limit = commons['limit']
     with Session(engine) as session:
-        res = select(Tb.User).filter(Tb.User.correo == user_email)
-        user = session.exec(res).one()
-    return user
+        res = select(Tb.Producto).limit(limit)
+        productos = session.exec(res).all()
+    return productos
 
 
 @router.get("/{product_id}", response_model=Tb.UserOut)
-async def read_product_by_id(user_email: str, q: Union[str, None] = None):
+async def read_product_by_id(product_id:int, token: str = Depends(oauth2_scheme), q: Union[str, None] = None):
     with Session(engine) as session:
-        res = select(Tb.User).filter(Tb.User.correo == user_email)
+        res = select(Tb.User).filter(Tb.User.correo == 1)
         user = session.exec(res).one()
     return user

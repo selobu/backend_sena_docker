@@ -9,6 +9,8 @@ from . import modules
 from .config import settings
 from sqlmodel import create_engine, SQLModel, Session, select
 from os.path import isfile, exists
+import uvicorn
+
 # print(help(FastAPI))
 app = FastAPI(
     title= settings.api_name,
@@ -64,3 +66,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
             status_code=400, detail="Usuario o contraseña equivocada")
 
     return {"access_token": user.correo, "token_type": "bearer"}
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="0.0.0.0", port=8000)
