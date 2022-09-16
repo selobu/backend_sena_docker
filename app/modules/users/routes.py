@@ -54,7 +54,7 @@ async def read_all_user(commons: dict = Depends(paginate_parameters),
 
 
 @app.get("/User/me", response_model=Tb.UserOut)
-async def read_users_me(current_user: Tb.User = Depends(get_current_active_user)):
+async def read_my_data(current_user: Tb.User = Depends(get_current_active_user)):
     return current_user
 
 
