@@ -15,7 +15,7 @@ class TipoSolicitud(SQLModel, table=True):
 class AtencionUsuario(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     timestamp: date = Field(default=date.today())
-    usuarioencargado: Optional[int] = Field(default=None, foreign_key='usuario.id')
+    usuarioencargado: Optional[int] = Field(default=None, foreign_key='user.id')
     nombrecompleto: str
     identificacion: str
     correocontacto: EmailStr
