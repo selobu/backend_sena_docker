@@ -8,7 +8,6 @@ from pydantic import EmailStr
 
 @map_name_to_table
 class Comprador_register(SQLModel):
-    id: Optional[int] = Field(default=None, primary_key=True)
     nombrecompleto: str
     cedula: str
     direccionResidencia: str

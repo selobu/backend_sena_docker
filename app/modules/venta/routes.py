@@ -13,7 +13,6 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 router = APIRouter(
     prefix="/ventas",
     tags=["Ventas"],
-    dependencies=[Depends(oauth2_scheme)],
     responses={404: {"description": "Not found"}},
 )
 
@@ -44,4 +43,7 @@ async def registrar_comprador(comprador: Tb.Comprador_register):
         session.add(req)
         session.commit()
         session.refresh(req)
+    # TODO : enviar correo con url para validar
     return req
+
+
