@@ -22,7 +22,7 @@ Tb = settings.app.Tb
 engine = settings.engine
 
 
-@router.get("/", response_model=List[Tb.Ventas])
+@router.get("/", response_model=List[Tb.Venta])
 async def read_ventas(commons: dict = Depends(paginate_parameters),
                         token: str = Depends(oauth2_scheme)):
     email = token
@@ -31,3 +31,17 @@ async def read_ventas(commons: dict = Depends(paginate_parameters),
         res = select(Tb.Producto).limit(limit)
         productos = session.exec(res).all()
     return productos
+
+
+@router.post("/comprador", response_model=Tb.Comprador)
+async def registrar_comprador(comprador: Tb.Comprador_register):
+    keys2update = list(comprador.__fields__.keys())
+    keys2update = [k for k in keys2update if k !=
+                   'id' and hasattr(Tb.Comprador, k)]
+    with Session(engine) as session:
+        req = Tb.Comprador(**dict((k, getattr(comprador, k))
+                                        for k in keys2update))
+        session.add(req)
+        session.commit()
+        session.refresh(req)
+    return req

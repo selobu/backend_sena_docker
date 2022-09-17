@@ -35,6 +35,7 @@ class Producto(SQLModel, table=True):
     descripcion: str
     ubicacion: Optional[int] = Field(default=None, foreign_key='ubicaciones.id')
     activa: bool = True
+    ventaid: Optional[int] = Field(default=None, foreign_key='venta.id')
 
 
 @map_name_to_table
