@@ -20,3 +20,14 @@ router = APIRouter(
 
 Tb = settings.app.Tb
 engine = settings.engine
+
+
+@router.get("/", response_model=List[Tb.Ventas])
+async def read_ventas(commons: dict = Depends(paginate_parameters),
+                        token: str = Depends(oauth2_scheme)):
+    email = token
+    limit = commons['limit']
+    with Session(engine) as session:
+        res = select(Tb.Producto).limit(limit)
+        productos = session.exec(res).all()
+    return productos
