@@ -12,6 +12,23 @@ class TipoSolicitud(SQLModel, table=True):
 
 
 @map_name_to_table
+class AtencionUsuario_register(SQLModel):
+    nombrecompleto: str
+    identificacion: str
+    correocontacto: EmailStr
+    telefonocontacto: str
+    tipoSolicitud: int = Field(foreign_key='tiposolicitud.id')
+    solicitud: str
+
+
+@map_name_to_table
+class AtencionUsuario_cierre(SQLModel):
+    resuelta: Optional[bool] = False
+    fechasolucion: Optional[date] = Field(default=None)
+    comentarioCierre: Optional[str]
+
+
+@map_name_to_table
 class AtencionUsuario(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     timestamp: date = Field(default=date.today())
@@ -25,5 +42,3 @@ class AtencionUsuario(SQLModel, table=True):
     resuelta: Optional[bool] = False
     fechasolucion: Optional[date] = Field(default=None)
     comentarioCierre: Optional[str]
-
-
