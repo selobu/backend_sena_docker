@@ -8,7 +8,7 @@ from pydantic import EmailStr
 @map_name_to_table
 class TipoSolicitud(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
-    tipo: str
+    tipo: str = Field(unique=True)
 
 
 @map_name_to_table

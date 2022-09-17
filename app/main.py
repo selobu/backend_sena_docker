@@ -1,8 +1,7 @@
 # coding: utf-8
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import OAuth2PasswordRequestForm
-from .db import UserInDB
-from .fake import createusers
+from .fake import createusers, setpqroptions
 from .tools import  Tb, digest
 from fastapi.middleware.cors import CORSMiddleware
 from . import modules
@@ -50,9 +49,10 @@ def create_all():
     return {'message':'ok'}
 
 
-@app.get("/createdefaultusers")
-def create_all():
+@app.get("/populatedatabase")
+def populate_database():
     createusers()
+    setpqroptions()
     return {'message': 'ok'}
 
 @app.post("/token")

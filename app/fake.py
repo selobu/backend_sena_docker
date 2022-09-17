@@ -5,6 +5,25 @@ from sqlmodel import Session, select
 from app.tools import digest
 from json import dumps
 
+def setpqroptions():
+    Tb = settings.app.Tb
+    pqrs = [{'tipo': 'Peticion'},
+            {'tipo': 'Queja'},
+            {'tipo': 'Reclamo'},
+            {'tipo': 'Cotización'},
+            {'tipo': 'Asesoría'},
+            {'tipo': 'Agradecimientos'}]
+    tipos = [t['tipo'] for t in pqrs]
+    with Session(settings.engine) as session:
+        not2add = select(Tb.TipoSolicitud.tipo).filter(
+            Tb.TipoSolicitud.tipo.in_(tipos))
+        not2add = session.exec(not2add).all()
+        # testing under heroku server
+        # raise Exception(dumps(session.exec(select(Tb.User.correo)).all()))
+        toadd = [pqr for pqr in pqrs if pqr['tipo'] not in not2add]
+        for pqr in toadd:
+            session.add(Tb.TipoSolicitud(**pqr))
+        session.commit()
 def createusers():
     Tb = settings.app.Tb
     default_users = [{
