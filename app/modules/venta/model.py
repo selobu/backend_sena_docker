@@ -33,6 +33,14 @@ class Comprador(SQLModel, table=True):
 
 
 @map_name_to_table
+class VentaTramit(SQLModel):
+    enviado: Optional[bool] = False
+    fechaEnvio: Optional[date] = Field(default=None)
+    recibido: Optional[bool] = False
+    facturar: Optional[bool] = False
+    cancelada: Optional[bool] = False
+
+@map_name_to_table
 class Venta(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     comprador: int = Field(foreign_key='comprador.id')
