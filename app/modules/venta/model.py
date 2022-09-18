@@ -27,7 +27,7 @@ class Comprador(SQLModel, table=True):
     departamento: str
     municipio: str
     direccionEnvio: str
-    correo: EmailStr
+    correo: EmailStr = Field(unique=True)
     telefono: str
     correovalidado: Optional[bool] = False
 
@@ -43,3 +43,9 @@ class Venta(SQLModel, table=True):
     recibido: Optional[bool] = False
     facturar: Optional[bool] = False # la facuración se envía al correo electrónico descrito
     cancelada: Optional[bool] = False
+
+
+@map_name_to_table
+class ValidateMail(SQLModel, table=True):
+    correo: EmailStr = Field(foreign_key='comprador.id', primary_key=True)
+    key: str
