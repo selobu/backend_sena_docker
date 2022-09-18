@@ -148,3 +148,32 @@ async def get_compra_productos(venta_id: int):
     return pds
 
 
+@router.post("/carritoproductos/{venta_id}", response_model=bool)
+async def set_compra_productos(venta_id: int, productos: List[int]):
+    """Actualiza el listado de productos de un carrito"""
+    with Session(engine) as session:
+        res = select(Tb.Producto).\
+            where(Tb.Producto.ventaid == Tb.Venta.id).\
+            filter(Tb.Venta.id==venta_id)
+        pds = session.exec(res).all()
+        for pd in pds: pd.ventaid=None
+        session.add_all(pds)
+        session.commit()
+        # se consultan los productos nuevos seleccionados
+        res = select(Tb.Producto).\
+            where(Tb.Producto.id.in_(productos)).\
+            filter(Tb.Producto.ventaid == None)
+        newpds = session.exec(res).all()
+        for pd in newpds:
+            pd.ventaid = venta_id
+        session.add_all(newpds)
+        # se relacionan los productos a la venta
+        session.commit()
+    return True
+
+
+@router.delete("/carrito/{venta_id}", response_model=bool)
+async def delete_compra_productos(venta_id: int):
+    """Elimina carrito de venta si no ha sido facturado"""
+    with Session(engine) as session:
+        return 
