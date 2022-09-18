@@ -125,9 +125,26 @@ async def compra_registrar(comprador_id: int, productos:List[int]):
     return venta
 
 
-@router.get("/carritoproductos/{venta_id}", response_model=Tb.Venta)
-async def get_compra_productos(venta_id: int, productos: List[Tb.Producto]):
+@router.get("/ventas/", response_model=List[Tb.Venta])
+async def read_ventas(commons: dict = Depends(paginate_parameters),
+                               token: str = Depends(oauth2_scheme)):
+    email = token
+    limit = commons['limit']
     with Session(engine) as session:
-        res=1
+        res = select(Tb.Venta).limit(limit)
+        ventas = session.exec(res).all()
         # se relacionan los productos a la venta
-    return res
+    return ventas
+
+
+@router.get("/carritoproductos/{venta_id}", response_model=List[Tb.Producto])
+async def get_compra_productos(venta_id: int):
+    with Session(engine) as session:
+        res = select(Tb.Producto).\
+            where(Tb.Producto.ventaid == Tb.Venta.id).\
+            filter(Tb.Venta.id==venta_id)
+        pds = session.exec(res).all()
+        # se relacionan los productos a la venta
+    return pds
+
+
