@@ -42,3 +42,4 @@ class Venta(SQLModel, table=True):
     fechaEnvio: Optional[date] = Field(default=None)
     recibido: Optional[bool] = False
     facturar: Optional[bool] = False # la facuración se envía al correo electrónico descrito
+    cancelada: Optional[bool] = False
